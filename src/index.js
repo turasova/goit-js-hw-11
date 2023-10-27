@@ -18,42 +18,38 @@ refs.form.addEventListener('submit', onSearchImages);
 
 function onSearchImages(evt) {
 
-    evt.preventDefault(); 
+  evt.preventDefault(); 
+  
     refs.gallery.innerHTML = '';
     page = 1;
 
      const { searchQuery } = evt.currentTarget.elements;
     keyOfSearchPhoto = searchQuery.value
-        .trim()
-        .toLowerCase()
-        .split(' ')
-        .join('+');
     
     if (keyOfSearchPhoto === '') {
         Notiflix.Notify.info('Enter your request, please!');
         return;
-    } 
-
-}
-
+  } 
+  
 fetchImages(keyOfSearchPhoto, page, perPage)
     .then((data) => {
         const searchResults = data.hits;
-     
+      refs.btnLoadMore.style.display = 'block';
 
-         if (data.totalHits === 0) {
+      if (data.totalHits === 0) {
+        refs.btnLoadMore.style.display = 'none';
                 Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
             } else {
                 Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
                 // console.log(searchResults);
              creatMarkup(searchResults);
              
-                lightbox.refresh();
+               lightbox.refresh();
 
             };
             if (data.totalHits > perPage) {
                 btnLoadMore.classList.remove('is-hidden');
-                window.addEventListener('scroll', showLoadMorePage);
+                window.addEventListener('scroll', showBtnLoadMorePage);
             };
 }
         
@@ -62,25 +58,64 @@ fetchImages(keyOfSearchPhoto, page, perPage)
     )
     .catch((err) => console.log(err));
 
+  btnLoadMore.addEventListener('click', onClickBtnLoadMore);
+
+  evt.target.reset();
+
+
+}
+
+function onClickBtnLoadMore(evt) {
+  console.log(evt);
+  page += 1;
+  fetchImages(keyOfSearchPhoto, page, perPage)
+    .then(data => {
+      const searchResults = data.hits;
+      const numberPage = Math.ceil(data.totalHits / perPage);
+      creatMarkup(searchResults);
+      if (page === numberPage) {
+        Notiflix.Notify("We're sorry, but you've reached the end of search results.")
+      }
+      lightbox.refresh();
+    })
+    .catch(err => console.log(err));
+}
+
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 300,
+})
+
+function showBtnLoadMorePage() {
+  if (nextPage()) {
+    onClickBtnLoadMore();
+  }
+}
+
+function nextPage() {
+  return (window.innerHeight >= document.documentElement.scrollHeight);
+}
 
 function creatMarkup(arr) {
     const photos = arr.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
-        return `<div class="photo-card">
+      return `<div class="photo-card">
+        <div class="images-card">
         <a class="gallery-link" href="${largeImageURL}">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+  <img src="${webformatURL}" alt="${tags}" loading="lazy"/>
   </a>
+  </div>
   <div class="info">
     <p class="info-item">
-      <b>${likes}</b>
+      <b>Likes<br />${likes}</b>
     </p>
     <p class="info-item">
-      <b>${views}</b>
+      <b>Views<br />${views}</b>
     </p>
     <p class="info-item">
-      <b>${comments}</b>
+      <b>Comments<br />${comments}</b>
     </p>
     <p class="info-item">
-      <b>${downloads}</b>
+      <b>Downloads<br />${downloads}</b>
     </p>
   </div>
 </div>`

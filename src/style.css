@@ -1,3 +1,91 @@
+
+:root {
+    --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --animation-duration: 250ms;
+}
+body {
+    background-color: lightgray;
+}
+img {
+    display: block;
+    max-width: 100%;
+    border-radius: 15px;
+}
+
+.gallery {
+    margin-top: 90px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px
+   
+}
+
+.photo-card {
+    box-shadow: 10px 5px 5px gray;
+background-image: linear-gradient(145deg, #ee82ee, slateblue, #ffd86a, purple);
+    border-radius: 15px;
+    padding: 35px;
+    align-items: center;
+    width: 350px;
+
+}
+.info-item {
+display: flex;
+flex-wrap: wrap;
+text-align: center;
+font-size: 14px;
+}
+.gallery-link {
+display: block;
+    text-decoration: none;
+    
+}
+.info {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+}
+.images-card {
+    width: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+}
+.search-form {
+   text-align: center;
+   
+   
+
+}
+.section-form {
+    background-image: linear-gradient(145deg, #ee82ee, slateblue, #ffd86a, purple);
+        padding-top: 30px;
+        padding-bottom: 30px;
+        box-shadow: 0px 5px 5px gray;
+}
+.input-form {
+    width: 400px;
+    height: 50px;
+    border-radius: 20px;
+    padding-left: 20px;
+}
+ button {
+    cursor: pointer;
+    height: 50px;
+    border-radius: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+ }
+ button:hover,
+ button:focus {
+    background-color: lightsteelblue
+ }
 .load-more-hidden {
     display: none;
 }
+.load-more{
+    margin: 60px auto;
+    width: 200px;
+}
+
