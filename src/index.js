@@ -109,11 +109,11 @@ function nextPage() {
 
 function creatMarkup(arr) {
     const photos = arr.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
-      return `<div class="photo-card">
-        <div class="images-card">
-        <a class="gallery-link" href="${largeImageURL}">
+      return `
+       <a class="gallery-link" href="${largeImageURL}">
+      <div class="photo-card">
+        <div class="images-card">   
   <img src="${webformatURL}" alt="${tags}" loading="lazy"/>
-  </a>
   </div>
   <div class="info">
     <p class="info-item">
@@ -129,7 +129,8 @@ function creatMarkup(arr) {
       <b>Downloads<br />${downloads}</b>
     </p>
   </div>
-</div>`
+</div>
+  </a>`
     }).join('');   
     refs.gallery.insertAdjacentHTML("beforeend", photos);
 }
