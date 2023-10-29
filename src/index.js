@@ -14,6 +14,7 @@ const perPage = 40;
 let page = 1;
 let searchPhoto = '';
 
+
 refs.form.addEventListener('submit', onSearchImages);
 
 function onSearchImages(evt) {
@@ -34,9 +35,8 @@ function onSearchImages(evt) {
   
 fetchImages(searchPhoto, page, perPage)
     .then((data) => {
-        const searchResults = data.hits;
-      refs.btnLoadMore.style.display = 'block';
-
+      const searchResults = data.hits;
+      
       if (data.totalHits === 0) {
         refs.btnLoadMore.style.display = 'none';
                 Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
@@ -48,20 +48,20 @@ fetchImages(searchPhoto, page, perPage)
                lightbox.refresh();
 
             };
-            // if (data.totalHits > perPage) {
-                
-            //     window.addEventListener('scroll', showBtnLoadMorePage);
-            // };
+            if (data.totalHits > perPage) {
+                 refs.btnLoadMore.style.display = 'block';
+                window.addEventListener('scroll', showBtnLoadMorePage);
+           };
 }
         
     // console.log(data)
   
     )
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 
   refs.btnLoadMore.addEventListener('click', onClickBtnLoadMore);
 
-  evt.target.reset();
+  evt.currentTarget.reset();
 
 
 }
@@ -72,13 +72,20 @@ function onClickBtnLoadMore(evt) {
   
   fetchImages(searchPhoto, page, perPage)
     .then(data => {
+  
       const searchResults = data.hits;
       const numberPage = Math.ceil(data.totalHits / perPage);
       creatMarkup(searchResults);
+    //   console.log(page);
+    //  console.log(numberPage);
 
+      //spy щоб прийшло 5 сторінок
+ 
       if (page === numberPage) {
-       
-        Notiflix.Notify("We're sorry, but you've reached the end of search results.")
+
+        refs.btnLoadMore.style.display = 'none';
+        
+        Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
       }
       lightbox.refresh();
     })
@@ -90,15 +97,15 @@ const lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 300,
 })
 
-// function showBtnLoadMorePage() {
-//   if (nextPage()) {
-//     onClickBtnLoadMore();
-//   }
-// }
+function showBtnLoadMorePage() {
+  if (nextPage()) {
+    onClickBtnLoadMore();
+  }
+}
 
-// function nextPage() {
-//   return (window.innerHeight >= document.documentElement.scrollHeight);
-// }
+function nextPage() {
+  return (window.innerHeight >= document.documentElement.scrollHeight);
+}
 
 function creatMarkup(arr) {
     const photos = arr.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
@@ -132,7 +139,7 @@ function creatMarkup(arr) {
 
 // Notiflix.Report.failure(
 //   'Error',
-//   'Oops! Something went wrong! Try reloading the page or select another cat breed!',
+//   'Oops! Something went wrong! Try reloading the page!',
 //   'OK',
 //   {
 //     width: '360px',

@@ -81,11 +81,10 @@ gap: 10px;
  button:focus {
     background-color: lightsteelblue
  }
-.load-more-hidden {
-    display: none;
-}
+
 .load-more{
     margin: 60px auto;
     width: 200px;
+    display: none;
 }
 
