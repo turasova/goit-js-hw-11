@@ -11,7 +11,8 @@ const params = new URLSearchParams({
 });
 
 export async function fetchImages(q, page, perPage) {
-    const url = `${BASE_URL}?${params}&q=${q}&page=${page}&per_page=${perPage}`;
-    const resp = await axios.get(url);
-    return resp.data;
+        const url = `${BASE_URL}?${params}&q=${q}&page=${page}&per_page=${perPage}`;
+        const resp = await axios.get(url);
+        return resp.data
+    
 }

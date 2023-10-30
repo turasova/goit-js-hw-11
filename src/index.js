@@ -8,6 +8,7 @@ const refs = {
     form: document.querySelector('#search-form'),
     gallery: document.querySelector('.gallery'),
     btnLoadMore: document.querySelector('.load-more'),
+    btnUp:document.querySelector('#up-btn'),
 }
 
 const perPage = 40;
@@ -48,16 +49,19 @@ fetchImages(searchPhoto, page, perPage)
                lightbox.refresh();
 
             };
-            if (data.totalHits > perPage) {
-                 refs.btnLoadMore.style.display = 'block';
-                window.addEventListener('scroll', showBtnLoadMorePage);
+      if (data.totalHits > perPage) {
+              
+        refs.btnLoadMore.style.display = 'none';
+
+        
+                 window.addEventListener('scroll', scrollBtnLoadMorePage);
            };
 }
         
     // console.log(data)
   
     )
-    .catch(err => console.log(err));
+    .catch(fetchError);
 
   refs.btnLoadMore.addEventListener('click', onClickBtnLoadMore);
 
@@ -75,6 +79,7 @@ function onClickBtnLoadMore(evt) {
   
       const searchResults = data.hits;
       const numberPage = Math.ceil(data.totalHits / perPage);
+
       creatMarkup(searchResults);
     //   console.log(page);
     //  console.log(numberPage);
@@ -85,11 +90,12 @@ function onClickBtnLoadMore(evt) {
 
         refs.btnLoadMore.style.display = 'none';
         
-        Notiflix.Notify.info("We're sorry, but you've reached the end of search results.")
+        Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.")
+        refs.btnLoadMore.removeEventListener('click', onClickBtnLoadMore);
       }
       lightbox.refresh();
     })
-    .catch(err => console.log(err));
+    .catch(fetchError);
 }
 
 const lightbox = new SimpleLightbox('.gallery a', {
@@ -97,14 +103,33 @@ const lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 300,
 })
 
-function showBtnLoadMorePage() {
+
+function smoothScroll() {
+  
+
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+
+}
+smoothScroll();
+
+
+function scrollBtnLoadMorePage() {
   if (nextPage()) {
-    onClickBtnLoadMore();
+   onClickBtnLoadMore();
   }
 }
 
 function nextPage() {
-  return (window.innerHeight >= document.documentElement.scrollHeight);
+  return (
+    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight
+  );
 }
 
 function creatMarkup(arr) {
@@ -113,7 +138,7 @@ function creatMarkup(arr) {
        <a class="gallery-link" href="${largeImageURL}">
       <div class="photo-card">
         <div class="images-card">   
-  <img src="${webformatURL}" alt="${tags}" loading="lazy"/>
+  <img src="${webformatURL}" alt="${tags}" class="photo" loading="lazy"/>
   </div>
   <div class="info">
     <p class="info-item">
@@ -135,21 +160,26 @@ function creatMarkup(arr) {
     refs.gallery.insertAdjacentHTML("beforeend", photos);
 }
 
-// function fetchError() {
+function fetchError() {
     
 
-// Notiflix.Report.failure(
-//   'Error',
-//   'Oops! Something went wrong! Try reloading the page!',
-//   'OK',
-//   {
-//     width: '360px',
-//     svgSize: '120px',
-//   },
-// );
-// }
+Notiflix.Report.failure(
+  'Error',
+  'Oops! Something went wrong! Try reloading the page!',
+  'OK',
+  {
+    width: '360px',
+    svgSize: '120px',
+  },
+);
+}
     
+refs.btnUp.addEventListener('click', onUpScroll);
 
+function onUpScroll(evt) {
+
+ 
+}
 
 
 
