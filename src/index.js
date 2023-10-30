@@ -178,7 +178,7 @@ refs.btnUp.addEventListener('click', onUpScroll);
 
 function onUpScroll(evt) {
 
-console.log(evt);
+
 }
 
 
