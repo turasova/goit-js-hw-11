@@ -2,6 +2,7 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from "notiflix";
 import { fetchImages } from "./pixabay_api";
+import { creatMarkup } from "./markup";
 
 
 const refs = {
@@ -81,6 +82,8 @@ function onClickBtnLoadMore(evt) {
       const numberPage = Math.ceil(data.totalHits / perPage);
 
       creatMarkup(searchResults);
+
+      smoothScroll();
     //   console.log(page);
     //  console.log(numberPage);
 
@@ -117,7 +120,7 @@ function smoothScroll() {
   });
 
 }
-smoothScroll();
+
 
 
 function scrollBtnLoadMorePage() {
@@ -132,33 +135,6 @@ function nextPage() {
   );
 }
 
-function creatMarkup(arr) {
-    const photos = arr.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
-      return `
-       <a class="gallery-link" href="${largeImageURL}">
-      <div class="photo-card">
-        <div class="images-card">   
-  <img src="${webformatURL}" alt="${tags}" class="photo" loading="lazy"/>
-  </div>
-  <div class="info">
-    <p class="info-item">
-      <b>Likes<br />${likes}</b>
-    </p>
-    <p class="info-item">
-      <b>Views<br />${views}</b>
-    </p>
-    <p class="info-item">
-      <b>Comments<br />${comments}</b>
-    </p>
-    <p class="info-item">
-      <b>Downloads<br />${downloads}</b>
-    </p>
-  </div>
-</div>
-  </a>`
-    }).join('');   
-    refs.gallery.insertAdjacentHTML("beforeend", photos);
-}
 
 function fetchError() {
     
@@ -173,8 +149,7 @@ Notiflix.Report.failure(
   },
 );
 }
-    
-
+  
 
 refs.btnUpToTop.addEventListener('click', onGoTop);
 window.addEventListener('scroll', onTrackScroll);
@@ -184,6 +159,7 @@ function onTrackScroll() {
   const coords = document.documentElement.clientHeight;
   if (offset > coords) {
     refs.btnUpToTop.classList.add('go-top--show');
+
   } else {
     refs.btnUpToTop.classList.remove('go-top--show');
   }
