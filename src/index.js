@@ -8,7 +8,7 @@ const refs = {
     form: document.querySelector('#search-form'),
     gallery: document.querySelector('.gallery'),
     btnLoadMore: document.querySelector('.load-more'),
-    btnUp:document.querySelector('#up-btn'),
+    btnUpToTop: document.querySelector('.go-top'),
 }
 
 const perPage = 40;
@@ -174,16 +174,25 @@ Notiflix.Report.failure(
 );
 }
     
-refs.btnUp.addEventListener('click', onUpScroll);
-
-function onUpScroll(evt) {
 
 
+refs.btnUpToTop.addEventListener('click', onGoTop);
+window.addEventListener('scroll', onTrackScroll);
+
+function onTrackScroll() {
+  const offset = window.scrollY;
+  const coords = document.documentElement.clientHeight;
+  if (offset > coords) {
+    refs.btnUpToTop.classList.add('go-top--show');
+  } else {
+    refs.btnUpToTop.classList.remove('go-top--show');
+  }
+  
 }
 
-
-
-
-
-
-
+function onGoTop() {
+  if (window.scrollY > 0) {
+    window.scrollBy(0, -75);
+    setTimeout(onGoTop, 0)
+  }
+}
